@@ -1,0 +1,80 @@
+﻿@model IEnumerable<TODO_APP.ViewModels.IndexTodoViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Todos</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Category
+            </th>
+
+            <th>
+                Tittle
+            </th>
+
+            <th>
+                Description
+            </th>
+
+            <th>
+                Deadline
+            </th>
+
+            <th>
+                isDone
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.categoryModel.NameC
+                </td>
+
+                <td>
+                    @item.todoModel.Tittle
+                </td>
+
+                <td>
+                    @item.todoModel.DescriptionT
+                </td>
+
+                <td>
+                    @item.todoModel.Deadline
+                </td>
+                <td>
+                    @{
+                        if (item.todoModel.isDone)
+                        {
+                            <a type="button" class="btn btn-danger"
+                               asp-action="ToggleTodoIsDone" asp-route-id="@item.todoModel.id">DONE!</a>
+                        }
+                        else
+                        {
+                            <a type="button" class="btn btn-success"
+                               asp-action="ToggleTodoIsDone" asp-route-id="@item.todoModel.id">NOT DONE!</a>
+                        }
+                    }
+                </td>
+
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.todoModel.id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.todoModel.id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
