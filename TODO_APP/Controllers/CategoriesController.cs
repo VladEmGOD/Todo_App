@@ -19,6 +19,7 @@ namespace TODO_APP.Controllers
         public async Task<IActionResult> Index()
         {
             var categories = await repo.GetCategoriesAsync();
+
             return View(categories);
         }
 
@@ -76,9 +77,9 @@ namespace TODO_APP.Controllers
             return View(category);
         }
         [HttpPost]
-        public async Task<IActionResult> Edit(CategoryModel cmodel) 
+        public async Task<IActionResult> Edit(CategoryModel cmodel)
         {
-            if (ModelState.IsValid) 
+            if (ModelState.IsValid)
             {
                 await repo.UpdateAsync(cmodel);
                 return RedirectToAction("Index");

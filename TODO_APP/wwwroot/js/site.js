@@ -1,4 +1,12 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿function confirmDeletion(name)
+{
+    return confirm(`Are you sure you want to delete ${name}?`);
+}
 
-// Write your JavaScript code.
+function confirmUpdate(name) {
+    return confirm(`Are you sure you want to update ${name}?`);
+}
+
+function confirmOut() {
+    return confirm("Are you sure you want to out?");
+}

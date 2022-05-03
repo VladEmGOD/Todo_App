@@ -69,3 +69,10 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+.centered {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

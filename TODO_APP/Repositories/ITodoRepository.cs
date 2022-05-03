@@ -12,6 +12,7 @@ namespace TODO_APP.Repositories
         Task DeleteAsync(int id);
         Task<TodoModel> GetAsync(int id);
         Task<List<TodoModel>> GetTodosAsync();
+        Task<List<TodoModel>> GetTodosByPaginationAsync(int page, int pageSize);
         Task UpdateAsync(TodoModel todo);
         Task<List<TodoModel>> GetTodoByCategoryAsync(int id);
     }

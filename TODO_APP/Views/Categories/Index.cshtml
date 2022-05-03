@@ -26,7 +26,7 @@
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                <a asp-action="Delete" onclick="confirmDeletion('Todo: @item.NameC')" asp-route-id="@item.id">Delete</a>
             </td>
         </tr>
 }

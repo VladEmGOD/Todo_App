@@ -14,8 +14,7 @@ namespace TODO_APP.Models
         [Required]
         public string Tittle { get; set; }
         public string DescriptionT { get; set; }
-        public DateTime Deadline { get; set; }
-        [Required]
+        public DateTime? Deadline { get; set; }
         public bool isDone { get; set; }
     }
 }

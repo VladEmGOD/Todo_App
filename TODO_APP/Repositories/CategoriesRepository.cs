@@ -21,7 +21,7 @@ namespace TODO_APP.Repositories
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                string query = $"select * from Categories";
+                string query = @"select * from Categories";
                 return (await db.QueryAsync<CategoryModel>(query)).ToList();
             }
         }
@@ -30,8 +30,8 @@ namespace TODO_APP.Repositories
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                string query = $"insert into Categories(NameC) values ('{category.NameC}')";
-                await db.QueryAsync(query);
+                string query = @"insert into Categories(nameC) values (@NameC)";
+                await db.QueryAsync(query, category);
             }
         }
 
@@ -39,8 +39,8 @@ namespace TODO_APP.Repositories
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                string query = $"update Categories set NameC = '{category.NameC}' where id = {category.id}";
-                await db.QueryAsync(query);
+                string query = @"update Categories set NameC = @NameC where id = @id";
+                await db.QueryAsync(query, category);
             }
         }
 
@@ -48,8 +48,8 @@ namespace TODO_APP.Repositories
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                string query = $"select * from Categories where id = {id}";
-                return await db.QueryFirstOrDefaultAsync<CategoryModel>(query);
+                string query = @"select * from Categories where id = @id";
+                return await db.QueryFirstOrDefaultAsync<CategoryModel>(query, new { id });
             }
         }
 
@@ -57,7 +57,7 @@ namespace TODO_APP.Repositories
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                await db.QueryAsync<CategoryModel>($"delete from Categories where id = {id}");
+                await db.QueryAsync<CategoryModel>(@"delete from Categories where id = @id", new { id });
             }
         }
 
@@ -65,8 +65,9 @@ namespace TODO_APP.Repositories
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                await db.QueryAsync<CategoryModel>($"update Categories set NameC = '{cmodel.NameC}' " +
-                                                   $"where id = {cmodel.id}");
+                var query = @"update Categories set NameC = @NameC 
+                              where id = @id";
+                await db.QueryAsync<CategoryModel>(query, cmodel);
             }
         }
     }

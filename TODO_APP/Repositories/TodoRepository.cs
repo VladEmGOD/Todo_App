@@ -21,10 +21,19 @@ namespace TODO_APP.Repositories
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                int isDone = todo.isDone ? 1 : 0;
-                var sqlQuery = $"insert into Todos(CategoryId, Tittle, DescriptionT, isDone, Deadline)" +
-                    $"values ({todo.CategoryId}, '{todo.Tittle}', '{todo.DescriptionT}', {isDone}, '{todo.Deadline}')";
-                await db.QueryAsync(sqlQuery);
+                string sqlquery;
+                if (todo.CategoryId != 0)
+                {
+                    sqlquery = @"insert into todos(CategoryId, Tittle, DescriptionT, isDone, Deadline)
+                                 values (@CategoryId, @Tittle, @DescriptionT, @isDone, @Deadline)";
+                }
+                else 
+                {
+                    sqlquery = @"insert into todos(Tittle, DescriptionT, isDone, Deadline)
+                                 values (@Tittle, @DescriptionT, @isDone, @Deadline)";
+                }
+
+                await db.ExecuteAsync(sqlquery, todo);
             }
         }
 
@@ -32,7 +41,7 @@ namespace TODO_APP.Repositories
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                await db.QueryAsync<TodoModel>($"delete from Todos where id = {id}");
+                await db.QueryAsync<TodoModel>($"delete from Todos where id = @id", new { id });
             }
         }
 
@@ -40,7 +49,7 @@ namespace TODO_APP.Repositories
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                return await db.QueryFirstOrDefaultAsync<TodoModel>($"select * from Todos WHERE Id = {id}");
+                return await db.QueryFirstOrDefaultAsync<TodoModel>($"select * from Todos WHERE Id = @id", new { id });
             }
         }
 
@@ -58,20 +67,33 @@ namespace TODO_APP.Repositories
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
                 int isDone = t.isDone ? 1 : 0;
-                await db.QueryAsync<TodoModel>($"update Todos set CategoryId = '{t.CategoryId}', Tittle = '{t.Tittle}'," +
-                                               $"DescriptionT = '{t.DescriptionT}', Deadline = '{t.Deadline}', isDone = {isDone}" +
-                                               $"where id = {t.id}");
+                var query = @"update Todos set CategoryId = @CategoryId, Tittle = @Tittle,
+                              DescriptionT = @DescriptionT, Deadline = @Deadline, isDone = @isDone
+                              where id = @id";
+
+                await db.QueryAsync<TodoModel>(query, t);
             }
         }
 
-        public async Task<List<TodoModel>> GetTodoByCategoryAsync(int id) 
+        public async Task<List<TodoModel>> GetTodoByCategoryAsync(int id)
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                string query = $"select * from Todos where CategoryId = {id}";
-                return (await db.QueryAsync<TodoModel>(query)).ToList();
+                string query = "select * from Todos where CategoryId = @id";
+                return (await db.QueryAsync<TodoModel>(query, new { id })).ToList();
             }
         }
 
+        public async Task<List<TodoModel>> GetTodosByPaginationAsync(int page, int pageSize)
+        {
+            using (IDbConnection db = new SqlConnection(_connectionString))
+            {
+                string query = @"select * from Todos
+                                order by id
+                                OFFSET @page*@pageSize ROWS
+                                FETCH NEXT @pageSize ROWS ONLY";
+                return (await db.QueryAsync<TodoModel>(query, new { page, pageSize })).ToList();
+            }
+        }
     }
 }
