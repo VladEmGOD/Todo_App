@@ -1,41 +1,54 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using TODO_APP.Models;
 using TODO_APP.Repositories;
+using TODO_APP.Repositories.Infrastructure;
+using System.IO;
+
 
 namespace TODO_APP.Controllers
 {
     public class CategoriesController : Controller
     {
-        ICategoriesPerository repo;
-        public CategoriesController(ICategoriesPerository c)
+        CategoryReslover categoriesResolver;
+        ICategoriesPerository categoriesRepository;
+        public CategoriesController(CategoryReslover c)
         {
-            repo = c;
+            categoriesResolver = c;
         }
 
         public async Task<IActionResult> Index()
         {
-            var categories = await repo.GetCategoriesAsync();
+            string dataSource = HttpContext.Session.GetJson<string>("DataSource") ?? "MsSql";
+            categoriesRepository = categoriesResolver(dataSource);
 
+            var categories = await categoriesRepository.GetCategoriesAsync();
+            
+            HttpContext.Session.SetJson("DataSource", dataSource);
             return View(categories);
         }
 
         public IActionResult Create() => View();
 
         [HttpPost]
-        public async Task<IActionResult> Create(CategoryModel cmodel)
+        public async Task<IActionResult> Create(CategoryModel categoryModel)
         {
+            string dataSource = HttpContext.Session.GetJson<string>("DataSource") ?? "MsSql";
+            categoriesRepository = categoriesResolver(dataSource);
+
             if (ModelState.IsValid)
             {
-                var category = await repo.GetCategoriesAsync();
+                var categories = await categoriesRepository.GetCategoriesAsync();
                 bool isExist = false;
 
-                foreach (CategoryModel c in category)
+                foreach (CategoryModel c in categories)
                 {
-                    if (c.NameC.ToLower() == cmodel.NameC.ToLower())
+                    if (c.Name.ToLower() == categoryModel.Name.ToLower())
                     {
                         isExist = true;
                         break;
@@ -48,7 +61,7 @@ namespace TODO_APP.Controllers
                     return View();
                 }
 
-                await repo.CreateAsync(cmodel);
+                await categoriesRepository.CreateAsync(categoryModel);
             }
 
             return RedirectToAction("Index");
@@ -56,36 +69,62 @@ namespace TODO_APP.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var todo = await repo.GetAsync(id);
+            string dataSource = HttpContext.Session.GetJson<string>("DataSource") ?? "MsSql";
+            categoriesRepository = categoriesResolver(dataSource);
+
+            var todo = await categoriesRepository.GetCategoryByIdAsync(id);
             if (todo != null)
             {
-                await repo.DeleteAsync(id);
-                TempData["Success"] = "Todo was deleted";
+                await categoriesRepository.DeleteAsync(id);
                 return RedirectToAction("Index");
             }
             else
             {
-                TempData["Error"] = "That todo not exist";
                 return RedirectToAction("Index");
             }
         }
 
         public async Task<IActionResult> Edit(int id)
         {
-            var category = await repo.GetAsync(id);
+            string dataSource = HttpContext.Session.GetJson<string>("DataSource") ?? "MsSql";
+            categoriesRepository = categoriesResolver(dataSource);
+
+            var category = await categoriesRepository.GetCategoryByIdAsync(id);
             if (category == null) return NotFound();
             return View(category);
         }
         [HttpPost]
-        public async Task<IActionResult> Edit(CategoryModel cmodel)
+        public async Task<IActionResult> Edit(CategoryModel categoryModel)
         {
+            string dataSource = HttpContext.Session.GetJson<string>("DataSource") ?? "MsSql";
+            categoriesRepository = categoriesResolver(dataSource);
+
             if (ModelState.IsValid)
             {
-                await repo.UpdateAsync(cmodel);
+                await categoriesRepository.EditAsync(categoryModel);
                 return RedirectToAction("Index");
             }
 
-            return View(cmodel);
+            return View(categoryModel);
+        }
+
+        public IActionResult ChangeDataSource(string source) 
+        {
+            if (source == "XML") 
+            {
+                HttpContext.Session.SetJson("DataSource", "XML");
+                categoriesRepository = categoriesResolver("XML");
+                return RedirectToAction("Index");
+            }
+
+            if (source == "MsSql")
+            {
+                HttpContext.Session.SetJson("DataSource", "MsSql");
+                categoriesRepository = categoriesResolver("MsSql");
+                return RedirectToAction("Index");
+            }
+
+            return BadRequest();
         }
     }
 }

@@ -8,7 +8,7 @@ namespace TODO_APP.ViewModels
 {
     public class TodoEditViewModel
     {
-        public TodoModel todoModel { get; set; }
-        public List<CategoryModel> categoryModels { get; set; }
+        public TodoModel TodoModel { get; set; }
+        public List<CategoryModel> CategoryModels { get; set; }
     }
 }

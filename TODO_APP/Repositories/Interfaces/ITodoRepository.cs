@@ -10,10 +10,10 @@ namespace TODO_APP.Repositories
     {
         Task CreateAsync(TodoModel todo);
         Task DeleteAsync(int id);
-        Task<TodoModel> GetAsync(int id);
-        Task<List<TodoModel>> GetTodosAsync();
-        Task<List<TodoModel>> GetTodosByPaginationAsync(int page, int pageSize);
+        Task<TodoModel> GetTodoByIdAsync(int id);
+        Task<IEnumerable<TodoModel>> GetTodosAsync();
+        Task<IEnumerable<TodoModel>> GetTodosByPaginationAsync(int page, int pageSize);
         Task UpdateAsync(TodoModel todo);
-        Task<List<TodoModel>> GetTodoByCategoryAsync(int id);
+        Task<IEnumerable<TodoModel>> GetTodoByCategoryAsync(int id);
     }
 }

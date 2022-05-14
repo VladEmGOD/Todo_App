@@ -11,39 +11,34 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input asp-for="todoModel.id" type="hidden" class="form-control" />
+            <input asp-for="TodoModel.Id" type="hidden" class="form-control" />
            
      
-            <label asp-for="todoModel.CategoryId" class="control-label"></label>
-            <select asp-for="todoModel.CategoryId" class="form-control">
+            <label asp-for="TodoModel.CategoryId" class="control-label"></label>
+            <select asp-for="TodoModel.CategoryId" class="form-control">
                 <option value="0">Choose a category</option>
-                @foreach (var item in Model.categoryModels)
+                @foreach (var item in Model.CategoryModels)
                 {
-                    <option value="@item.id">@item.NameC</option>
+                    <option value="@item.Id">@item.Name</option>
                 }
             </select>
-            <span asp-validation-for="todoModel.CategoryId" class="text-danger"></span>
+            <span asp-validation-for="TodoModel.CategoryId" class="text-danger"></span>
 
             <div class="form-group">
-                <label asp-for="todoModel.Tittle" class="control-label"></label>
-                <input asp-for="todoModel.Tittle" class="form-control" />
-                <span asp-validation-for="todoModel.Tittle" class="text-danger"></span>
+                <label asp-for="TodoModel.Tittle" class="control-label"></label>
+                <input asp-for="TodoModel.Tittle" class="form-control" />
+                <span asp-validation-for="TodoModel.Tittle" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="todoModel.DescriptionT" class="control-label"></label>
-                <input asp-for="todoModel.DescriptionT" class="form-control" />
-                <span asp-validation-for="todoModel.DescriptionT" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="todoModel.Deadline" class="control-label"></label>
-                <input asp-for="todoModel.Deadline" class="form-control" />
-                <span asp-validation-for="todoModel.Deadline" class="text-danger"></span>
+                <label asp-for="TodoModel.Deadline" class="control-label"></label>
+                <input asp-for="TodoModel.Deadline" class="form-control" />
+                <span asp-validation-for="TodoModel.Deadline" class="text-danger"></span>
             </div>
 
-            <input type="hidden" asp-for="todoModel.isDone" />
+            <input type="hidden" asp-for="TodoModel.IsDone" />
 
             <div class="form-group">
-                <input type="submit" value="Save" onclick="confirmUpdate('Todo: @Model.todoModel.Tittle')" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>

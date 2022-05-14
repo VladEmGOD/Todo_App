@@ -8,8 +8,8 @@ namespace TODO_APP.ViewModels
 {
     public class TodoCreateFormViewModel
     {
-        public TodoModel todoModel { get; set; }
-        public List<CategoryModel> categoryModel { get; set; }
+        public TodoModel TodoModel { get; set; }
+        public List<CategoryModel> CategoryModels { get; set; }
 
     }
 }

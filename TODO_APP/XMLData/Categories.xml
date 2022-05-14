@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<ArrayOfCategoryModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CategoryModel>
+    <Id>1</Id>
+    <Name>TESTCategory</Name>
+  </CategoryModel>
+  <CategoryModel>
+    <Id>4</Id>
+    <Name>ABOBA</Name>
+  </CategoryModel>
+  <CategoryModel>
+    <Id>5</Id>
+    <Name>asdsad</Name>
+  </CategoryModel>
+  <CategoryModel>
+    <Id>6</Id>
+    <Name>11111</Name>
+  </CategoryModel>
+</ArrayOfCategoryModel>

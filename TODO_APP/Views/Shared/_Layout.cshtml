@@ -19,13 +19,24 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a asp-action="List" asp-controller="Todo" class="nav-link">Todos</a>
+                            <a asp-action="Index" asp-controller="Todo" class="nav-link">Todos</a>
                         </li>
                         <li class="nav-item">
                             <a asp-action="Index" asp-controller="Categories" class="nav-link">Categories</a>
                         </li>
                     </ul>
                 </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Select data source
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                     <a class="dropdown-item" asp-action="ChangeDataSource" asp-route-source="MsSql">MSSQL</a>
+                     <a class="dropdown-item" asp-action="ChangeDataSource" asp-route-source="XML">XML</a>
+                    </div>
+                </div>
+
             </div>
         </nav>
     </header>

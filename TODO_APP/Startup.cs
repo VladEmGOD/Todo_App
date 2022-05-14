@@ -1,14 +1,18 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using TODO_APP.Repositories;
+using TODO_APP.Repositories.Infrastructure;
+using TODO_APP.Repositories.XML;
 
 namespace TODO_APP
 {
@@ -25,11 +29,45 @@ namespace TODO_APP
         public void ConfigureServices(IServiceCollection services)
         {
             string connectionString = Configuration.GetConnectionString("TODO_DB");
-            services.AddTransient<ITodoRepository, TodoRepository>(provider => new TodoRepository(connectionString));
-            services.AddTransient<ICategoriesPerository, ICategoriesRepository>(provider => new ICategoriesRepository(connectionString));
-            services.AddControllersWithViews();
-        }
+            services.AddSession();
 
+            services.AddTransient<IDbConnection>(provider => new SqlConnection(connectionString));
+            //MSSQL dependencies 
+            services.AddScoped<MsSqlTodoRepository>();
+            services.AddScoped<MsSqlCategoriesRepository>();
+            //XML dependencies 
+            services.AddScoped<XMLTodoReository>();
+            services.AddScoped<XMLCategoriesRepository>();
+
+            services.AddTransient<CategoryReslover>(provider => serviceTypeName => 
+            {
+                switch (serviceTypeName) 
+                {
+                    case "MsSql":
+                        return provider.GetService<MsSqlCategoriesRepository>();
+                    case "XML":
+                        return provider.GetService<XMLCategoriesRepository>();
+                    default:
+                        return null;
+                }
+            });
+
+            services.AddTransient<TodoReslover>(provider => serviceTypeName =>
+            {
+                switch (serviceTypeName)
+                {
+                    case "MsSql":
+                        return provider.GetService<MsSqlTodoRepository>(); break;
+                    case "XML":
+                        return provider.GetService<XMLTodoReository>(); break;
+                    default:
+                        return null;
+                }
+            });
+            services.AddControllersWithViews();
+
+           
+        }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -48,13 +86,15 @@ namespace TODO_APP
 
             app.UseRouting();
 
+            app.UseSession();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Todo}/{action=Index}/{id?}");
+                    pattern: "/{controller=Todo}/{action=Index}/{id?}");
             });
         }
     }

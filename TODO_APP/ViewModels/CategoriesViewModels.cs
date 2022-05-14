@@ -4,13 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TODO_APP.Models
+namespace TODO_APP.ViewModels
 {
-    public class CategoryModel
+    public class CategoriesViewModels
     {
-        [Required]
-        public int Id { get; set; }
-        [Required]
         public string Name { get; set; }
     }
 }

@@ -13,15 +13,15 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <input asp-for="id" type ="hidden" class="form-control" />
+            <input asp-for="Id" type ="hidden" class="form-control" />
             
             <div class="form-group">
-                <label asp-for="NameC" class="control-label"></label>
-                <input asp-for="NameC" class="form-control" />
-                <span asp-validation-for="NameC" class="text-danger"></span>
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save"  onclick="confirmUpdate('Todo: @Model.NameC')" class="btn btn-primary" />
+                <input type="submit" value="Save"  onclick="confirmUpdate('Todo: @Model.Name')" class="btn btn-primary" />
             </div>
         </form>
     </div>

@@ -1,4 +1,4 @@
-﻿@model TodoCreateFormViewModel
+﻿@model IndexPageViewModel
 
 @{
     ViewData["Title"] = "IndexCreate";
@@ -9,25 +9,108 @@
         <h1>Input your todo, please:</h1>
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
             <div class="input-group">
-                <input asp-for="todoModel.Tittle" type="text"  class="form-control" placeholder="Enter you todo"  aria-describedby="button-addon1"/>
-                <select asp-for="todoModel.CategoryId" class="form-control">
+                <input asp-for="TodoModel.Tittle" type="text" class="form-control" placeholder="Enter you todo" aria-describedby="button-addon1" />
+                <select asp-for="TodoModel.CategoryId" class="form-control">
                     <option value="0">Choose a category</option>
-                    @foreach (var item in Model.categoryModel)
+                    @foreach (var item in Model.Categories)
                     {
-                        <option value="@item.id">@item.NameC</option>
+                        <option value="@item.Id">@item.Name</option>
                     }
                 </select>
+                <input asp-for="TodoModel.Deadline" type="date" class="form-control" />
                 <input type="submit" value="Create" class="btn btn-outline-secondary" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="List">Go to List</a>
+<hr/>
+
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Select category
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        @foreach (var item in Model.Categories)
+        {
+            <a class="dropdown-item" asp-action="TodoByCategory" asp-controller="Todo" asp-route-id="@item.Id">@item.Name</a>
+        }
+    </div>
 </div>
+<hr/>
+@if (Model.Todos.Count() == 0)
+{
+    <h1>THERE IS NO TODOS :(</h1>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Tittle</th>
+                <th>Deadline</th>
+                <th>isDone</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Todos)
+            {
+                <tr>
+                    @{
+                        if (item.Category != null)
+                        {
+                            <td>@item.Category</td>
+                        }
+                        else
+                        {
+                            <td>No Category</td>
+                        }
+                    }
+
+                    <td>
+                        @item.Tittle
+                    </td>
+
+                    @{
+                        if (item.Deadline != null)
+                        {
+                            <td>@item.Deadline.Value.ToString("MM/dd/yyyy")</td>
+                        }
+                        else
+                        {
+                            <td>No Deadline</td>
+                        }
+                    }
+
+                    <td>
+                        @{
+                            if (item.IsDone)
+                            {
+                                <a type="button" class="btn btn-success"
+                                   asp-action="ToggleTodoIsDone" asp-route-id="@item.Id">DONE</a>
+                            }
+                            else
+                            {
+                                <a type="button" class="btn btn-danger"
+                                   asp-action="ToggleTodoIsDone" asp-route-id="@item.Id">NOT DONE</a>
+                            }
+                        }
+                    </td>
+
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id" onclick="confirmDeletion('Todo: @item.Tittle')">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -9,12 +9,11 @@ namespace TODO_APP.Models
     public class TodoModel
     {
         [Required]
-        public int id { get; set; }
+        public int Id { get; set; }
         public int? CategoryId { get; set; }
         [Required]
         public string Tittle { get; set; }
-        public string DescriptionT { get; set; }
         public DateTime? Deadline { get; set; }
-        public bool isDone { get; set; }
+        public bool IsDone { get; set; }
     }
 }

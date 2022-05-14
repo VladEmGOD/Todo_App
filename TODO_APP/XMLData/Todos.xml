@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<ArrayOfTodoModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TodoModel>
+    <Id>3</Id>
+    <CategoryId>4</CategoryId>
+    <Tittle>Test Todo 3</Tittle>
+    <Deadline>2022-05-12T00:00:00</Deadline>
+    <IsDone>false</IsDone>
+  </TodoModel>
+  <TodoModel>
+    <Id>4</Id>
+    <CategoryId>5</CategoryId>
+    <Tittle>Coock some cake</Tittle>
+    <Deadline>2022-05-19T00:00:00</Deadline>
+    <IsDone>true</IsDone>
+  </TodoModel>
+  <TodoModel>
+    <Id>5</Id>
+    <CategoryId>4</CategoryId>
+    <Tittle>Test Todo 23</Tittle>
+    <Deadline xsi:nil="true" />
+    <IsDone>true</IsDone>
+  </TodoModel>
+  <TodoModel>
+    <Id>6</Id>
+    <CategoryId>4</CategoryId>
+    <Tittle>Test Todo 24</Tittle>
+    <Deadline xsi:nil="true" />
+    <IsDone>false</IsDone>
+  </TodoModel>
+  <TodoModel>
+    <Id>7</Id>
+    <CategoryId>0</CategoryId>
+    <Tittle>4545454</Tittle>
+    <Deadline xsi:nil="true" />
+    <IsDone>true</IsDone>
+  </TodoModel>
+</ArrayOfTodoModel>
