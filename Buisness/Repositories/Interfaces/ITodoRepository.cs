@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Buisness.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TODO_APP.Models;
 
-namespace TODO_APP.Repositories
+namespace Buisness.Repositories.Interfaces
 {
     public interface ITodoRepository
     {

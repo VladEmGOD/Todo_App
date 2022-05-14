@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using TODO_APP.Models;
 using Dapper;
+using Buisness.Models;
+using Buisness.Repositories.Interfaces;
 
-namespace TODO_APP.Repositories
+namespace MsSQL.Repositories
 {
     public class MsSqlCategoriesRepository : ICategoriesPerository
     {

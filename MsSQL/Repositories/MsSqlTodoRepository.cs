@@ -4,10 +4,11 @@ using System.Data;
 using System.Linq;
 using Dapper;
 using System.Threading.Tasks;
-using TODO_APP.Models;
 using Microsoft.Data.SqlClient;
+using Buisness.Repositories.Interfaces;
+using Buisness.Models;
 
-namespace TODO_APP.Repositories
+namespace MsSQL.Repositories
 {
     public class MsSqlTodoRepository : ITodoRepository
     {
