@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using TODO_APP.Infrastructure
+
+@{ 
+    string currentDataSource = ViewContext.HttpContext.Request.Cookies["DataSource"];
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -16,6 +21,7 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
@@ -27,16 +33,12 @@
                     </ul>
                 </div>
 
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Select data source
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                     <a class="dropdown-item" asp-action="ChangeDataSource" asp-route-source="MsSql">MSSQL</a>
-                     <a class="dropdown-item" asp-action="ChangeDataSource" asp-route-source="XML">XML</a>
-                    </div>
-                </div>
+                <select class="form-select form-select-lg mb-3" id="data-source-select" aria-label=".form-select-lg">
 
+                    @foreach (var source in Enum.GetNames(typeof(DataSource)))
+                    {
+                <option selected=@((bool)(currentDataSource == source)) value="@source">@source</option>}
+                </select
             </div>
         </nav>
     </header>

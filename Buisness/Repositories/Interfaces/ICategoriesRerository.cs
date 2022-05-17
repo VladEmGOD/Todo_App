@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Buisness.Repositories.Interfaces
 {
-    public interface ICategoriesPerository
+    public interface ICategoriesRerository
     {
         Task<IEnumerable<CategoryModel>> GetCategoriesAsync();
         Task CreateAsync(CategoryModel category);

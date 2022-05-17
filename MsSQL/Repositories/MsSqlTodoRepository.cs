@@ -21,8 +21,8 @@ namespace MsSQL.Repositories
         public Task CreateAsync(TodoModel todo)
         {
             if (todo.CategoryId == 0) todo.CategoryId = null;
-            string sqlquery = @"insert into todos(CategoryId, Tittle, isDone, Deadline)
-                                values (@CategoryId, @Tittle, @isDone, @Deadline)";
+            string sqlquery = @"insert into todos(CategoryId, Title, isDone, Deadline)
+                                values (@CategoryId, @Title, @isDone, @Deadline)";
             return DbConection.ExecuteAsync(sqlquery, todo);
         }
 
@@ -47,7 +47,7 @@ namespace MsSQL.Repositories
             int isDone = todo.IsDone ? 1 : 0;
 
             if (todo.CategoryId == 0) todo.CategoryId = null;
-            var query = @"update Todos set CategoryId = @CategoryId, Tittle = @Tittle,
+            var query = @"update Todos set CategoryId = @CategoryId, Title = @Title,
                               Deadline = @Deadline, isDone = @isDone
                               where id = @Id";
             return DbConection.QueryAsync<TodoModel>(query, todo);

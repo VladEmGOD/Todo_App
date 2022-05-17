@@ -10,7 +10,7 @@ using Buisness.Repositories.Interfaces;
 
 namespace MsSQL.Repositories
 {
-    public class MsSqlCategoriesRepository : ICategoriesPerository
+    public class MsSqlCategoriesRepository : ICategoriesRerository
     {
         private IDbConnection DbConnection = null;
         public MsSqlCategoriesRepository(IDbConnection db)

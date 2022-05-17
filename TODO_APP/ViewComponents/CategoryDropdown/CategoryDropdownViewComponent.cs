@@ -1,23 +1,28 @@
 ﻿using Buisness.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using TODO_APP.Repositories;
-using TODO_APP.Repositories.Infrastructure;
+using TODO_APP.Infrastructure;
 
 namespace TODO_APP.ViewComponents.CategoryDropdown
 {
     public class CategoryDropdownViewComponent : ViewComponent
     {
-        CategoryReslover categoriesResolver;
-        ICategoriesPerository categoriesRepository;
-        public CategoryDropdownViewComponent(CategoryReslover c) 
+        ICategoriesRerository categoriesRepository;
+        DataSource dataSource;
+        public CategoryDropdownViewComponent(RepositoryResolver repositoryReslover, IHttpContextAccessor httpContextAccesor) 
         {
-            string dataSource = HttpContext.Session.GetJson<string>("DataSource") ?? "MsSql";
-            categoriesResolver = c;
-            categoriesRepository = categoriesResolver(dataSource);
+            string? dataSourceStr = httpContextAccesor.HttpContext.Request.Cookies["DataSource"];
+            bool isSourceValid = Enum.TryParse(dataSourceStr, out dataSource);
+            if (isSourceValid)
+            {
+                categoriesRepository = repositoryReslover.ResolveCategoryRepository(dataSource);
+            }
+            else
+            {
+                categoriesRepository = repositoryReslover.ResolveCategoryRepository(DataSource.MsSql);
+            }
         }
 
         public async Task<IViewComponentResult> InvokeAsync()

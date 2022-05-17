@@ -1,10 +1,5 @@
 ﻿using Buisness.Models;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using TODO_APP.Models;
 
 namespace TODO_APP.ViewModels
 {
@@ -17,14 +12,14 @@ namespace TODO_APP.ViewModels
 
         public IndexTodoViewModel(TodoModel todoModel)
         {
-            Tittle = todoModel.Tittle;
+            Title = todoModel.Title;
             Id = todoModel.Id;
             Deadline = todoModel.Deadline;
             IsDone = todoModel.IsDone;
         }
         public int Id { get; set; }
         public string Category { get; set; }
-        public string Tittle { get; set; }
+        public string Title { get; set; }
         public DateTime? Deadline { get; set; }
         public bool IsDone { get; set; }
     }

@@ -1,18 +1,18 @@
+using GraphQL.Server;
+using GraphQL.Server.Transports.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MsSQL.Repositories;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using TODO_APP.Repositories;
-using TODO_APP.Repositories.Infrastructure;
+using TODO_APP.GraphQL.Mutations;
+using TODO_APP.GraphQL.Queries;
+using TODO_APP.GraphQL.Schemas;
+using TODO_APP.Infrastructure;
 using TODO_APP.Repositories.XML;
 
 namespace TODO_APP
@@ -29,10 +29,20 @@ namespace TODO_APP
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connectionString = Configuration.GetConnectionString("TODO_DB");
             services.AddSession();
+            services.AddHttpContextAccessor();
+            services.AddDistributedMemoryCache();
 
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
+            string connectionString = Configuration.GetConnectionString("TODO_DB");
             services.AddTransient<IDbConnection>(provider => new SqlConnection(connectionString));
+            services.AddTransient<RepositoryResolver>();
             //MSSQL dependencies 
             services.AddScoped<MsSqlTodoRepository>();
             services.AddScoped<MsSqlCategoriesRepository>();
@@ -40,34 +50,17 @@ namespace TODO_APP
             services.AddScoped<XMLTodoReository>();
             services.AddScoped<XMLCategoriesRepository>();
 
-            services.AddTransient<CategoryReslover>(provider => serviceTypeName => 
-            {
-                switch (serviceTypeName) 
-                {
-                    case "MsSql":
-                        return provider.GetService<MsSqlCategoriesRepository>();
-                    case "XML":
-                        return provider.GetService<XMLCategoriesRepository>();
-                    default:
-                        return null;
-                }
-            });
+            //GraphQl
+            services.AddScoped<AppSchema>();
+            services.AddScoped<TodoAppQuery>();
+            services.AddScoped<TodoAppMutation>();
 
-            services.AddTransient<TodoReslover>(provider => serviceTypeName =>
-            {
-                switch (serviceTypeName)
-                {
-                    case "MsSql":
-                        return provider.GetService<MsSqlTodoRepository>(); break;
-                    case "XML":
-                        return provider.GetService<XMLTodoReository>(); break;
-                    default:
-                        return null;
-                }
-            });
+            services.AddGraphQL()
+                .AddSystemTextJson()
+                .AddGraphTypes(typeof(AppSchema), ServiceLifetime.Transient);
+
             services.AddControllersWithViews();
 
-           
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -82,6 +75,9 @@ namespace TODO_APP
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseGraphQL<AppSchema, GraphQLHttpMiddleware<AppSchema>>();
+            
+            app.UseGraphQLAltair();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

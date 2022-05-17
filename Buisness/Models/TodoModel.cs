@@ -12,7 +12,7 @@ namespace Buisness.Models
         public int Id { get; set; }
         public int? CategoryId { get; set; }
         [Required]
-        public string Tittle { get; set; }
+        public string Title { get; set; }
         public DateTime? Deadline { get; set; }
         public bool IsDone { get; set; }
     }

@@ -11,7 +11,7 @@ using Buisness.Repositories.Interfaces;
 
 namespace TODO_APP.Repositories.XML
 {
-    public class XMLCategoriesRepository : ICategoriesPerository
+    public class XMLCategoriesRepository : ICategoriesRerository
     {
         public string fileName = "Categories.xml";
         public string filePash = @"C:\Study\SIC\TODO_APP\TODO_APP\XMLData\Categories.xml";

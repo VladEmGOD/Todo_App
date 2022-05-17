@@ -1,34 +1,39 @@
 ﻿using Buisness.Models;
 using Buisness.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TODO_APP.Infrastructure;
 using TODO_APP.Repositories;
 using TODO_APP.Repositories.Infrastructure;
 using TODO_APP.ViewModels;
-
 
 namespace TODO_APP.Controllers
 {
     public class TodoController : Controller
     {
-        CategoryReslover categoriesResolver;
-        TodoReslover todoResolver;
-        ICategoriesPerository categoriesRepository;
+        ICategoriesRerository categoriesRepository;
         ITodoRepository todoRepository;
-
-        public TodoController(CategoryReslover c, TodoReslover t)
+        DataSource dataSource;
+        public TodoController(RepositoryResolver repositoryReslover, IHttpContextAccessor httpContextAccesor)
         {
-            todoResolver = t;
-            categoriesResolver = c;
+            string dataSourceStr = httpContextAccesor.HttpContext.Request.Cookies["DataSource"];
+            if (Enum.TryParse(dataSourceStr, out dataSource))
+            {
+                categoriesRepository = repositoryReslover.ResolveCategoryRepository(dataSource);
+                todoRepository = repositoryReslover.ResolveTodoRepository(dataSource);
+            }
+            else
+            {
+                categoriesRepository = repositoryReslover.ResolveCategoryRepository(DataSource.MsSql);
+                todoRepository = repositoryReslover.ResolveTodoRepository(DataSource.MsSql);
+            }
         }
         public async Task<IActionResult> Index()
         {
-            string dataSource = HttpContext.Session.GetJson<string>("DataSource") ?? "MsSql";
-            ChangeRepositoriesSources(dataSource);
-
             var categories = await categoriesRepository.GetCategoriesAsync();
             var todos = await todoRepository.GetTodosAsync();
 
@@ -43,9 +48,6 @@ namespace TODO_APP.Controllers
 
         public async Task<IActionResult> TodoByCategory(int id)
         {
-            string dataSource = HttpContext.Session.GetJson<string>("DataSource") ?? "MsSql";
-            ChangeRepositoriesSources(dataSource);
-
             var todos = await todoRepository.GetTodoByCategoryAsync(id);
             var categories = await categoriesRepository.GetCategoriesAsync();
 
@@ -59,9 +61,6 @@ namespace TODO_APP.Controllers
         }
         public async Task<IActionResult> Create()
         {
-            string dataSource = HttpContext.Session.GetJson<string>("DataSource") ?? "MsSql";
-            ChangeRepositoriesSources(dataSource);
-
             var categories = await categoriesRepository.GetCategoriesAsync();
             HttpContext.Session.SetJson("DataSource", dataSource);
             return View(new TodoCreateFormViewModel { CategoryModels = categories.ToList() });
@@ -70,9 +69,6 @@ namespace TODO_APP.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(TodoCreateFormViewModel todo)
         {
-            string dataSource = HttpContext.Session.GetJson<string>("DataSource") ?? "MsSql";
-            ChangeRepositoriesSources(dataSource);
-
             if (ModelState.IsValid)
             {
                 await todoRepository.CreateAsync(todo.TodoModel);
@@ -84,9 +80,6 @@ namespace TODO_APP.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            string dataSource = HttpContext.Session.GetJson<string>("DataSource") ?? "MsSql";
-            ChangeRepositoriesSources(dataSource);
-
             var todo = await todoRepository.GetTodoByIdAsync(id);
             if (todo == null) return NotFound();
             await todoRepository.DeleteAsync(id);
@@ -96,9 +89,6 @@ namespace TODO_APP.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            string dataSource = HttpContext.Session.GetJson<string>("DataSource") ?? "MsSql";
-            ChangeRepositoriesSources(dataSource);
-
             var todo = await todoRepository.GetTodoByIdAsync(id);
             if (todo == null) return NotFound();
 
@@ -109,14 +99,11 @@ namespace TODO_APP.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(TodoEditViewModel todoEditVM)
         {
-            string dataSource = HttpContext.Session.GetJson<string>("DataSource") ?? "MsSql";
-            ChangeRepositoriesSources(dataSource);
-
             if (!ModelState.IsValid) return View(todoEditVM);
 
-            var t = await todoRepository.GetTodoByIdAsync(todoEditVM.TodoModel.Id);
+            var todo = await todoRepository.GetTodoByIdAsync(todoEditVM.TodoModel.Id);
 
-            if (t == null)
+            if (todo == null)
             {
                 ModelState.AddModelError("", "Todo not found!");
                 return RedirectToAction("Index");
@@ -129,9 +116,6 @@ namespace TODO_APP.Controllers
 
         public async Task<IActionResult> ToggleTodoIsDone(int id)
         {
-            string dataSource = HttpContext.Session.GetJson<string>("DataSource") ?? "MsSql";
-            ChangeRepositoriesSources(dataSource);
-
             var todo = await todoRepository.GetTodoByIdAsync(id);
 
             if (todo != null)
@@ -146,30 +130,6 @@ namespace TODO_APP.Controllers
 
             return RedirectToAction("Index");
         }
-
-        private void ChangeRepositoriesSources(string source)
-        {
-            categoriesRepository = categoriesResolver(source);
-            todoRepository = todoResolver(source);
-        }
-
-        public IActionResult ChangeDataSource(string source)
-        {
-            if (source == "XML")
-            {
-                HttpContext.Session.SetJson("DataSource", "XML");
-                return RedirectToAction("Index");
-            }
-
-            if (source == "MsSql")
-            {
-                HttpContext.Session.SetJson("DataSource", "MsSql");
-                return RedirectToAction("Index");
-            }
-
-            return BadRequest();
-        }
-
 
         private IEnumerable<IndexTodoViewModel> MapTodosAndCategoriesToIndexTodoViewModels(IEnumerable<TodoModel> todos, IEnumerable<CategoryModel> categories)
         {
