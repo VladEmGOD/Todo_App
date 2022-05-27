@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Buisness\Buisness.csproj" />
+		<ProjectReference Include="..\MsSQL\MsSQL.csproj" />
+		<ProjectReference Include="..\TODO_APP\TODO_APP.csproj" />
+		<ProjectReference Include="..\XML\XML.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Dapper" Version="2.0.123" />
+		<PackageReference Include="GraphQL" Version="4.7.1" />
+		<PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="5.2.0" />
+		<PackageReference Include="GraphQL.Server.Transports.AspNetCore.SystemTextJson" Version="5.2.0" />
+		<PackageReference Include="GraphQL.Server.Ui.Altair" Version="5.2.0" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="4.1.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+	</ItemGroup>
+
+</Project>

@@ -1,15 +1,18 @@
+using GraphQL.Server;
+using GraphQL.Server.Transports.AspNetCore;
+using GraphQL_API.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MsSQL.Repositories;
 using System.Data;
-using TODO_APP.Infrastructure;
 using TODO_APP.Repositories.XML;
 
-namespace TODO_APP
+namespace GraphQL_API
 {
     public class Startup
     {
@@ -36,9 +39,16 @@ namespace TODO_APP
             services.AddScoped<XMLTodoReository>();
             services.AddScoped<XMLCategoriesRepository>();
 
-            services.AddControllersWithViews();
+            //GraphQl
+            services.AddScoped<AppSchema>();
+            services.AddScoped<TodoAppQuery>();
+            services.AddScoped<TodoAppMutation>();
 
+            services.AddGraphQL()
+               .AddSystemTextJson()
+               .AddGraphTypes(typeof(AppSchema), ServiceLifetime.Transient);
         }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -46,22 +56,21 @@ namespace TODO_APP
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseExceptionHandler("/Todo/Error");
-                app.UseHsts();
-            }
+
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseGraphQL<AppSchema, GraphQLHttpMiddleware<AppSchema>>();
+            app.UseGraphQLAltair();
 
-            app.UseEndpoints(endpoints =>
+            app.UseSpa(spa =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "/{controller=Todo}/{action=Index}/{id?}");
+                spa.Options.SourcePath = "client";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                }
             });
         }
     }

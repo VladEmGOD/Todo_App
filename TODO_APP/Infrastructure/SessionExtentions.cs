@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace TODO_APP.Repositories.Infrastructure
+namespace TODO_APP.Infrastructure
 {
     public static class SessionExtentions
     {

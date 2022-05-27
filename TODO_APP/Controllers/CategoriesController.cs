@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
-using TODO_APP.Repositories.Infrastructure;
 using Buisness.Repositories.Interfaces;
 using Buisness.Models;
 using Microsoft.AspNetCore.Http;
+using Buisness;
 using TODO_APP.Infrastructure;
 
 namespace TODO_APP.Controllers
@@ -22,7 +22,7 @@ namespace TODO_APP.Controllers
             {
                 categoriesRepository = repositoryReslover.ResolveCategoryRepository(dataSource);
             }
-            else 
+            else
             {
                 categoriesRepository = repositoryReslover.ResolveCategoryRepository(DataSource.MsSql);
             }
@@ -30,10 +30,7 @@ namespace TODO_APP.Controllers
 
         public async Task<IActionResult> Index()
         {
-
             var categories = await categoriesRepository.GetCategoriesAsync();
-            
-            HttpContext.Session.SetJson("DataSource", dataSource);
             return View(categories);
         }
 

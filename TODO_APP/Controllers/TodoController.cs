@@ -1,4 +1,5 @@
-﻿using Buisness.Models;
+﻿using Buisness;
+using Buisness.Models;
 using Buisness.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using TODO_APP.Infrastructure;
 using TODO_APP.Repositories;
-using TODO_APP.Repositories.Infrastructure;
 using TODO_APP.ViewModels;
 
 namespace TODO_APP.Controllers
@@ -41,8 +41,7 @@ namespace TODO_APP.Controllers
                 .OrderBy(n => n.IsDone).ThenBy(n => n.Deadline == null).ThenBy(n => n.Deadline);
 
             var indexPageViewModel = new IndexPageViewModel(sortedTodosIndexViewModels, categories);
-            
-            HttpContext.Session.SetJson("DataSource", dataSource);
+           
             return View(indexPageViewModel);
         }
 
@@ -56,13 +55,11 @@ namespace TODO_APP.Controllers
 
             var indexPageViewModel = new IndexPageViewModel(sortedTodosIndexViewModels, categories);
             
-            HttpContext.Session.SetJson("DataSource", dataSource);
             return View("Index", indexPageViewModel);
         }
         public async Task<IActionResult> Create()
         {
             var categories = await categoriesRepository.GetCategoriesAsync();
-            HttpContext.Session.SetJson("DataSource", dataSource);
             return View(new TodoCreateFormViewModel { CategoryModels = categories.ToList() });
         }
 
