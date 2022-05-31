@@ -1,0 +1,1 @@
+export const SourceEnum = Object.freeze({"MsSql":1, "XML":2})
