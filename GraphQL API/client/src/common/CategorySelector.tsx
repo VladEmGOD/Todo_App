@@ -2,9 +2,15 @@ import React from 'react';
 import {ButtonGroup, Dropdown, DropdownButton,} from "react-bootstrap";
 import {useDispatch} from "react-redux";
 import {resetSelectedCategoryId, setSelectedCategoryId} from "../redux/todoSlice";
+import {useAppDispatch} from "../redux/types/hooks";
+import {CategoryType} from "../redux/types/models";
 
-export const CategorySelector = ({categories}) => {
-    const dispatch = useDispatch()
+type PropsType = {
+    categories: CategoryType[]
+}
+
+export const CategorySelector: React.FC<PropsType> = ({categories}) => {
+    const dispatch = useAppDispatch()
 
     return (
         <DropdownButton as={ButtonGroup} menuVariant={"secondary"} title={"Select category"}>
@@ -13,7 +19,7 @@ export const CategorySelector = ({categories}) => {
             <Dropdown.Divider/>
             {
                 categories.map(c => <Dropdown.Item key={c.id}
-                                                   onClick={() => dispatch(setSelectedCategoryId({id: c.id}))}>
+                                                   onClick={() => dispatch(setSelectedCategoryId(c.id))}>
                     {c.name}
                 </Dropdown.Item>)
             }

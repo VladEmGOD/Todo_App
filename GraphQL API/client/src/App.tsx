@@ -16,8 +16,8 @@ function App() {
                 <Route path="/" exact render={() => <TodosPage/>}/>
                 <Route path="/categories" exact render={() => <CategoriesPage/>}/>
                 <Route path="/categories/create" exact render={() => <CreateCategoryPage/>}/>
-                <Route path="/todo/edit/" exact render={() => <EditTodoPage/>}/>
-                <Route path="/categories/edit/" exact render={() => <EditCategoryPage/>}/>
+                <Route path="/todo/edit/:id" exact render={() => <EditTodoPage/>}/>
+                <Route path="/category/edit/:id" exact render={() => <EditCategoryPage/>}/>
             </div>
         </Container>
     </>

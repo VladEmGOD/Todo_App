@@ -4,21 +4,28 @@ import {useDispatch} from "react-redux";
 import {useFormik} from "formik";
 import {addCategory} from "../../redux/categoriesSlice";
 import {useHistory} from "react-router-dom";
+import {CategoryType} from "../../redux/types/models";
+import {useAppDispatch} from "../../redux/types/hooks";
 
-export const CreateCategoryForm = (props) => {
-    const dispatch = useDispatch()
+type ValidationType = {
+    name?: string
+}
+
+export const CreateCategoryForm = () => {
+    const dispatch = useAppDispatch()
     const history = useHistory()
     const formik = useFormik({
         initialValues: {
-            id: null,
+            id: 0,
             name: ""
         },
-        onSubmit: newCategory => {
-            dispatch(addCategory({category: newCategory}))
+        onSubmit: (newCategory: CategoryType, {resetForm}) => {
+            dispatch(addCategory(newCategory))
+            resetForm({})
             history.push("/categories")
         },
         validate: values => {
-            let errors = {}
+            let errors: ValidationType = {}
             if (!values.name) errors.name = "Category name is required"
             return errors
         }
@@ -26,12 +33,14 @@ export const CreateCategoryForm = (props) => {
 
     return (
         <Form onSubmit={formik.handleSubmit}>
-            {formik.errors.name ?
-                <span className={"text-danger field-validation-error"}>{formik.errors.name}</span> : ""}
-
             <Form.Group className={"form-group"}>
                 <Form.Label>Name</Form.Label>
-                <Form.Control onChange={formik.handleChange} name={"name"}/>
+                <Form.Control onChange={formik.handleChange}
+                              name={"name"}
+                              value={formik.values.name}
+                />
+                {formik.errors.name ?
+                    <span className={"text-danger field-validation-error"}>{formik.errors.name}</span> : ""}
             </Form.Group>
 
             <Form.Group className={"form-group"}>

@@ -2,7 +2,7 @@ import React from 'react';
 import {Row} from "react-bootstrap";
 import {CreateCategoryForm} from "../../components/Category/CreateCategoryForm";
 
-export function CreateCategoryPage(props) {
+export function CreateCategoryPage() {
     return (
         <>
             <h1>Create</h1>

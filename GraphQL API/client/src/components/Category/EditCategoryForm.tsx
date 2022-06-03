@@ -1,12 +1,22 @@
 import React from 'react';
 import {Button, Form} from "react-bootstrap";
-import {useDispatch} from "react-redux";
 import {useHistory} from "react-router-dom";
 import {useFormik} from "formik";
 import {updateCategory} from "../../redux/categoriesSlice";
+import {CategoryType} from "../../redux/types/models";
+import {useAppDispatch} from "../../redux/types/hooks";
 
-export const EditCategoryForm = ({category}) => {
-    const dispatch = useDispatch()
+
+type PropsType = {
+    category: CategoryType
+}
+
+type ValidationType = {
+    name?: string
+}
+
+export const EditCategoryForm: React.FC<PropsType> = ({category}) => {
+    const dispatch = useAppDispatch()
     const history = useHistory()
     const formik = useFormik({
         initialValues: {
@@ -15,12 +25,12 @@ export const EditCategoryForm = ({category}) => {
         },
         onSubmit: editedCategory => {
             if (formik.isValid) {
-                dispatch(updateCategory({category: editedCategory}))
+                dispatch(updateCategory(editedCategory))
                 history.push("/categories")
             }
         },
         validate: values => {
-            let errors = {}
+            let errors: ValidationType = {}
             if (!values.name) errors.name = "Category name is required"
             return errors
         }

@@ -1,14 +1,16 @@
 import React from 'react';
 import {Row} from "react-bootstrap";
 import {EditTodoForm} from "../../components/Todo/EditTodoForm";
-import {useSelector} from "react-redux";
 import {getCategories} from "../../redux/selectors/categoriesSelector";
-import {getEditTodo} from "../../redux/selectors/todoSelectors";
+import {getTodoById} from "../../redux/selectors/todoSelectors";
+import {useAppSelector} from "../../redux/types/hooks";
+import {useParams} from "react-router-dom";
 
 
 export const EditTodoPage = () => {
-    const editedTodo = useSelector(getEditTodo)
-    const categories = useSelector(getCategories)
+    let {id} = useParams<{id: string}>()
+    const editedTodo = useAppSelector(getTodoById(+id))
+    const categories = useAppSelector(getCategories)
 
     if (!editedTodo) return <h1>There is no todo for editing!</h1>
 

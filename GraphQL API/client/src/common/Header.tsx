@@ -1,14 +1,14 @@
 import React from "react";
 import {Container, Form, Nav, Navbar} from "react-bootstrap";
-import {useDispatch} from "react-redux";
 import {resetSelectedCategoryId} from "../redux/todoSlice";
 import {Link} from "react-router-dom";
-import {SourceEnum} from "../redux/DataSourceEnum";
-import {setDataSource} from "../redux/appSlice";
+import {SourceEnum} from "../redux/types/DataSourceEnum";
+import {setDataSource} from "../redux/appConfigSlice";
+import {useAppDispatch} from "../redux/types/hooks";
 
-export const Header = (props) => {
-    const dispatch = useDispatch()
-    const resetSelectedCategory = (e) => {
+export const Header = () => {
+    const dispatch = useAppDispatch()
+    const resetSelectedCategory = (e: React.MouseEvent<HTMLElement>) => {
         dispatch(resetSelectedCategoryId())
     }
     return (
@@ -24,7 +24,7 @@ export const Header = (props) => {
                                   onClick={resetSelectedCategory}>Categories</Link>
                         </Nav>
                         <Form.Select aria-label={".form-select-lg"}
-                                     onChange={(e)=>dispatch(setDataSource({dataSource: +e.target.value}))}>
+                                     onChange={(e)=>dispatch(setDataSource(+e.target.value))}>
                             <option value={SourceEnum.MsSql}>MsSql</option>
                             <option value={SourceEnum.XML}>XML</option>
                         </Form.Select>

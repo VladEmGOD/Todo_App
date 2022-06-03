@@ -4,12 +4,22 @@ import {useFormik} from "formik";
 import {updateTodo} from "../../redux/todoSlice";
 import {useDispatch} from "react-redux";
 import {useHistory} from "react-router-dom";
+import {CategoryType, TodoType} from "../../redux/types/models";
 
-export const EditTodoForm = ({todo, categories}) => {
+type PropsType = {
+    todo: TodoType,
+    categories: CategoryType[]
+}
+
+type ValidationType = {
+    title?: string
+}
+
+export const EditTodoForm: React.FC<PropsType> = ({todo, categories}) => {
     const dispatch = useDispatch()
     const history = useHistory()
     const formik = useFormik({
-        initialValues:{
+        initialValues: {
             id: todo.id,
             title: todo.title,
             deadline: todo.deadline,
@@ -18,13 +28,13 @@ export const EditTodoForm = ({todo, categories}) => {
         },
         onSubmit: editedTodo => {
             if (formik.isValid) {
-                dispatch(updateTodo({todo: editedTodo}))
+                dispatch(updateTodo(editedTodo))
                 history.push('/')
             }
         },
         validate: values => {
-            let errors = {}
-            if(!values.title) errors.title = "Todo title is required"
+            let errors: ValidationType = {}
+            if (!values.title) errors.title = "Todo title is required"
             return errors
         }
     })
@@ -33,11 +43,12 @@ export const EditTodoForm = ({todo, categories}) => {
         <Form onSubmit={formik.handleSubmit}>
             <Form.Group className={"form-group"}>
                 <Form.Label htmlFor={"categoryId"}>Category</Form.Label>
-                <Form.Select id={"categoryId"} className={"form-control"} onChange={e => formik.setFieldValue(
-                    "categoryId",
-                    parseInt(e.target.value)
-                )}>
-                    <option value={0}>Select a category</option>)
+                <Form.Select id={"categoryId"}
+                             className={"form-control"}
+                             value={formik.values.categoryId}
+                             onChange={e => formik.setFieldValue("categoryId", parseInt(e.target.value))}>
+                    <option value={0}>Select a category</option>
+                    )
                     {
                         categories.map(c =>
                             <option selected={todo.categoryId === c.id} value={c.id}>{c.name}</option>)
