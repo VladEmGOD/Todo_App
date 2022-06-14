@@ -16,7 +16,7 @@ namespace GraphQL_API
         ICategoriesRerository categoriesRerository;
         public TodoAppMutation(RepositoryResolver repositoryReslover, IHttpContextAccessor httpContextAccesor)
         {
-            string dataSourceStr = httpContextAccesor.HttpContext.Request.Cookies["DataSource"];
+            string dataSourceStr = httpContextAccesor.HttpContext.Request.Headers["dataSource"];
             if (Enum.TryParse(dataSourceStr, out dataSource))
             {
                 todoRepository = repositoryReslover.ResolveTodoRepository(dataSource);
@@ -64,7 +64,7 @@ namespace GraphQL_API
                   var todoId = context.GetArgument<int>("Id");
                   var todo = await todoRepository.GetTodoByIdAsync(todoId);
 
-                  if (todo == null) throw new ExecutionError($"Todo with id {todoId} not found!");
+                  if (todo == null) throw new ExecutionError($"Category with id {todoId} not found!");
 
                   await todoRepository.DeleteAsync(todoId);
                   return todo;

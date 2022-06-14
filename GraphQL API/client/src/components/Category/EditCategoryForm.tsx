@@ -2,7 +2,7 @@ import React from 'react';
 import {Button, Form} from "react-bootstrap";
 import {useHistory} from "react-router-dom";
 import {useFormik} from "formik";
-import {updateCategory} from "../../redux/categoriesSlice";
+import {updateCategory, updateCategoryAsync} from "../../redux/categoriesSlice";
 import {CategoryType} from "../../redux/types/models";
 import {useAppDispatch} from "../../redux/types/hooks";
 
@@ -23,9 +23,9 @@ export const EditCategoryForm: React.FC<PropsType> = ({category}) => {
             id: category.id,
             name: category.name
         },
-        onSubmit: editedCategory => {
+        onSubmit: (editedCategory: CategoryType) => {
             if (formik.isValid) {
-                dispatch(updateCategory(editedCategory))
+                dispatch((updateCategoryAsync(editedCategory)))
                 history.push("/categories")
             }
         },

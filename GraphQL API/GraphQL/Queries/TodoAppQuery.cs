@@ -17,7 +17,7 @@ namespace GraphQL_API
         ICategoriesRerository categoriesRerository;
         public TodoAppQuery(RepositoryResolver repositoryReslover, IHttpContextAccessor httpContextAccesor)
         {
-            string dataSourceStr = httpContextAccesor.HttpContext.Request.Cookies["DataSource"];            
+            string dataSourceStr = httpContextAccesor.HttpContext.Request.Headers["dataSource"];            
             if (Enum.TryParse(dataSourceStr, out dataSource))
             {
                 todoRepository = repositoryReslover.ResolveTodoRepository(dataSource);

@@ -16,6 +16,7 @@ namespace GraphQL_API
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -47,6 +48,16 @@ namespace GraphQL_API
             services.AddGraphQL()
                .AddSystemTextJson()
                .AddGraphTypes(typeof(AppSchema), ServiceLifetime.Transient);
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.AllowAnyHeader()
+                    .WithMethods("POST")
+                    .AllowAnyOrigin();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,7 +73,7 @@ namespace GraphQL_API
 
             app.UseGraphQL<AppSchema, GraphQLHttpMiddleware<AppSchema>>();
             app.UseGraphQLAltair();
-
+            app.UseCors();
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "client";

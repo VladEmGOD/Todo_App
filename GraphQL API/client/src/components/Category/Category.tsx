@@ -1,6 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {removeCategory} from "../../redux/categoriesSlice";
+import {deleteCategoryAsync, removeCategory} from "../../redux/categoriesSlice";
 import {CategoryType} from "../../redux/types/models";
 import {useAppDispatch} from "../../redux/types/hooks";
 
@@ -20,7 +20,7 @@ export const Category: React.FC<Props> = ({category}) => {
                     <Link to={"/category/delete/"}
                           onClick={event => {
                               event.preventDefault()
-                              dispatch(removeCategory(category.id))
+                              dispatch(deleteCategoryAsync(category.id))
                           }}
                     >Delete</Link>
                 </td>

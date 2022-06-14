@@ -1,25 +1,30 @@
-import React from "react";
-import {useSelector} from "react-redux";
-import {getSelectedCategoryId, getTodos} from "../../redux/selectors/todoSelectors";
-import {getCategories} from "../../redux/selectors/categoriesSelector";
+import React, {useEffect} from "react";
+import {useDispatch} from "react-redux";
 import {TodoInputForm} from "../../components/Todo/TodoInputForm";
 import {CategorySelector} from "../../common/CategorySelector";
 import {Todos} from "../../components/Todo/Todos";
-import {useAppSelector} from "../../redux/types/hooks";
+import {fetchTodosAsync} from "../../redux/todoSlice";
+import {fetchCategoriesAsync} from "../../redux/categoriesSlice";
+
 
 export const TodosPage = () => {
-    let todos = useAppSelector(getTodos)
-    const categories = useAppSelector(getCategories)
-    const selectedCategoryId = useAppSelector(getSelectedCategoryId)
+    const dispatch = useDispatch()
 
-    if (selectedCategoryId) todos = todos.filter(t => t.categoryId === selectedCategoryId)
+    useEffect(()=>{
+        dispatch(fetchTodosAsync())
+    },[dispatch])
+
+    useEffect(()=>{
+        dispatch(fetchCategoriesAsync())
+    },[dispatch])
+
     return (
         <>
-            <TodoInputForm categories={categories}/>
+            <TodoInputForm />
             <hr/>
-            <CategorySelector categories={categories}/>
+            <CategorySelector/>
             <hr/>
-            <Todos categories={categories} todos={todos}/>
+            <Todos />
         </>
     )
 }

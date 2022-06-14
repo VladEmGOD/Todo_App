@@ -2,10 +2,11 @@ import React from 'react';
 import {Button, Form} from "react-bootstrap";
 import {useDispatch} from "react-redux";
 import {useFormik} from "formik";
-import {addCategory} from "../../redux/categoriesSlice";
+import {addCategory, createCategoryAsync} from "../../redux/categoriesSlice";
 import {useHistory} from "react-router-dom";
 import {CategoryType} from "../../redux/types/models";
 import {useAppDispatch} from "../../redux/types/hooks";
+import {CategoryCreateInputType} from "../../GraphQl/mutations";
 
 type ValidationType = {
     name?: string
@@ -16,11 +17,10 @@ export const CreateCategoryForm = () => {
     const history = useHistory()
     const formik = useFormik({
         initialValues: {
-            id: 0,
             name: ""
         },
-        onSubmit: (newCategory: CategoryType, {resetForm}) => {
-            dispatch(addCategory(newCategory))
+        onSubmit: (newCategory: CategoryCreateInputType, {resetForm}) => {
+            dispatch(createCategoryAsync(newCategory))
             resetForm({})
             history.push("/categories")
         },

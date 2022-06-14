@@ -1,5 +1,6 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createAction, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {CategoryType} from "./types/models";
+import {CategoryCreateInputType, UpdateCategoryInputType} from "../GraphQl/mutations";
 
 interface CategorySlice {
     categories: Array<CategoryType>,
@@ -17,9 +18,12 @@ export const categorySlice = createSlice({
     name:'category',
     initialState,
     reducers:{
+        setCategories: (state, action: PayloadAction<CategoryType[]>) => {
+            state.categories = action.payload
+        },
         addCategory: (state, action: PayloadAction<CategoryType>) => {
             const category = action.payload
-            state.createCategoryId += 1
+            state.createCategoryId += state.categories.at(-1)?.id as number
             category.id = state.createCategoryId + 1
             state.categories.push(category)
         },
@@ -43,4 +47,9 @@ export const categorySlice = createSlice({
 
 export default categorySlice.reducer
 
-export const {addCategory, removeCategory, setEditCategory, updateCategory} = categorySlice.actions
+export const {addCategory, removeCategory, setEditCategory, setCategories, updateCategory} = categorySlice.actions
+
+export const fetchCategoriesAsync = createAction("category/fetchCategoriesAsync")
+export const updateCategoryAsync = createAction<CategoryType>("category/updateTodoAsync")
+export const deleteCategoryAsync = createAction<number>("category/deleteCategoryAsync")
+export const createCategoryAsync = createAction<CategoryCreateInputType>("category/createCategoryAsync")

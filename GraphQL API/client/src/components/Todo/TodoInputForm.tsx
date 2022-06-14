@@ -1,31 +1,35 @@
 import React from 'react';
 import {Button, Form, Row} from "react-bootstrap";
 import {useDispatch} from "react-redux";
-import {addTodo} from "../../redux/todoSlice";
+import {createTodoAsync} from "../../redux/todoSlice";
 import {useFormik} from "formik";
-import {CategoryType, TodoType} from "../../redux/types/models";
-
-type PropsType = {
-    categories : Array<CategoryType>
-}
+import {TodosCreateInputType} from "../../GraphQl/mutations";
+import {useAppSelector} from "../../redux/types/hooks";
+import {getCategories} from "../../redux/selectors/categoriesSelector";
 
 type ValidationType = {
     title?: string
 }
 
-export const TodoInputForm: React.FC<PropsType> = ({categories}) => {
+export const TodoInputForm: React.FC = () => {
+
+    const categories = useAppSelector(getCategories)
+
     let dispatch = useDispatch()
-    const formik = useFormik<TodoType>({
+    const formik = useFormik<TodosCreateInputType>({
         initialValues:{
-            id: 0,
             title: "",
             deadline: "",
             categoryId: 0,
-            isDone: false
         },
-        onSubmit: (todo:TodoType, {resetForm}) => {
+        onSubmit: (todo:TodosCreateInputType, {resetForm}) => {
             if (formik.isValid) {
-                dispatch(addTodo(todo))
+                if (todo.deadline !== "") {
+                    let date = new Date(todo.deadline as string)
+                    todo.deadline = date.toISOString()
+                }
+                if (todo.deadline === '') todo.deadline = undefined
+                dispatch(createTodoAsync(todo))
                 resetForm({})
             }
         },

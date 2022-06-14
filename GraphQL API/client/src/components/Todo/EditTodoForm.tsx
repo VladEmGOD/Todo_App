@@ -1,10 +1,11 @@
 import React from 'react';
 import {Button, Form} from "react-bootstrap";
 import {useFormik} from "formik";
-import {updateTodo} from "../../redux/todoSlice";
+import {updateTodoAsync} from "../../redux/todoSlice";
 import {useDispatch} from "react-redux";
 import {useHistory} from "react-router-dom";
 import {CategoryType, TodoType} from "../../redux/types/models";
+import {TodoUpdateInputType} from "../../GraphQl/mutations";
 
 type PropsType = {
     todo: TodoType,
@@ -18,17 +19,21 @@ type ValidationType = {
 export const EditTodoForm: React.FC<PropsType> = ({todo, categories}) => {
     const dispatch = useDispatch()
     const history = useHistory()
-    const formik = useFormik({
+    const formik = useFormik<TodoUpdateInputType>({
         initialValues: {
             id: todo.id,
             title: todo.title,
             deadline: todo.deadline,
             categoryId: todo.categoryId,
-            isDone: todo.isDone
         },
-        onSubmit: editedTodo => {
+        onSubmit: (editedTodo: TodoUpdateInputType) => {
             if (formik.isValid) {
-                dispatch(updateTodo(editedTodo))
+                if (editedTodo.deadline !== "") {
+                    let date = new Date(editedTodo.deadline as string)
+                    editedTodo.deadline = date.toISOString()
+                }
+                if (editedTodo.deadline === '') editedTodo.deadline = undefined
+                dispatch(updateTodoAsync(editedTodo))
                 history.push('/')
             }
         },

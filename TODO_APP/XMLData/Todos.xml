@@ -5,14 +5,14 @@
     <CategoryId>4</CategoryId>
     <Title>Test Todo 3</Title>
     <Deadline>2022-05-12T00:00:00</Deadline>
-    <IsDone>false</IsDone>
+    <IsDone>true</IsDone>
   </TodoModel>
   <TodoModel>
     <Id>4</Id>
     <CategoryId>5</CategoryId>
     <Title>Coock some cake</Title>
     <Deadline>2022-05-19T00:00:00</Deadline>
-    <IsDone>false</IsDone>
+    <IsDone>true</IsDone>
   </TodoModel>
   <TodoModel>
     <Id>5</Id>
@@ -26,20 +26,20 @@
     <CategoryId>4</CategoryId>
     <Title>Test Todo 24</Title>
     <Deadline xsi:nil="true" />
-    <IsDone>true</IsDone>
+    <IsDone>false</IsDone>
   </TodoModel>
   <TodoModel>
     <Id>7</Id>
     <CategoryId>0</CategoryId>
     <Title>4545454</Title>
     <Deadline xsi:nil="true" />
-    <IsDone>true</IsDone>
+    <IsDone>false</IsDone>
   </TodoModel>
   <TodoModel>
     <Id>8</Id>
     <CategoryId>4</CategoryId>
     <Title>TestTodo12344</Title>
     <Deadline xsi:nil="true" />
-    <IsDone>false</IsDone>
+    <IsDone>true</IsDone>
   </TodoModel>
 </ArrayOfTodoModel>

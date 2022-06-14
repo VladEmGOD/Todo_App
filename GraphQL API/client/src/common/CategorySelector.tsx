@@ -2,15 +2,14 @@ import React from 'react';
 import {ButtonGroup, Dropdown, DropdownButton,} from "react-bootstrap";
 import {useDispatch} from "react-redux";
 import {resetSelectedCategoryId, setSelectedCategoryId} from "../redux/todoSlice";
-import {useAppDispatch} from "../redux/types/hooks";
+import {useAppDispatch, useAppSelector} from "../redux/types/hooks";
 import {CategoryType} from "../redux/types/models";
+import {getCategories} from "../redux/selectors/categoriesSelector";
 
-type PropsType = {
-    categories: CategoryType[]
-}
-
-export const CategorySelector: React.FC<PropsType> = ({categories}) => {
+export const CategorySelector: React.FC = () => {
     const dispatch = useAppDispatch()
+    const categories = useAppSelector(getCategories)
+
 
     return (
         <DropdownButton as={ButtonGroup} menuVariant={"secondary"} title={"Select category"}>
