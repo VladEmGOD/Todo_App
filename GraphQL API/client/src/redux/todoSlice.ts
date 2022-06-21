@@ -1,13 +1,17 @@
 import {createAction, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {TodoType} from "./types/models";
 import {TodosCreateInputType, TodoUpdateInputType} from "../GraphQl/mutations";
+import {FetchTodosInputType, GetTodosVariablesType} from "../GraphQl/queries";
 
 interface TodoSlice {
     todos: Array<TodoType>,
     editTodo: TodoType | null | undefined,
     fetchingTodosIds: Array<number>
     createTodoId: number,
-    selectedCategoryId: number | null
+    selectedCategoryId: number | null,
+    activeTodoPage: number,
+    pageSize: number,
+    todosCount: number
 }
 
 const initialState: TodoSlice = {
@@ -15,7 +19,10 @@ const initialState: TodoSlice = {
     fetchingTodosIds: [],
     editTodo: null,
     createTodoId: 0,
-    selectedCategoryId: null
+    selectedCategoryId: null,
+    activeTodoPage: 0,
+    pageSize: 4,
+    todosCount: 0
 }
 
 export const todoSlice = createSlice({
@@ -26,10 +33,7 @@ export const todoSlice = createSlice({
             state.todos = action.payload
         },
         addTodo: (state, action: PayloadAction<TodoType>) => {
-            let todo = action.payload
-            state.createTodoId += state.todos.at(-1)?.id as number
-            todo.id = state.createTodoId + 1
-            state.todos.push(todo)
+            state.todos.push(action.payload)
         },
         addFetchingTodosId: (state, action: PayloadAction<number>) => {
             state.fetchingTodosIds.push(action.payload)
@@ -63,6 +67,12 @@ export const todoSlice = createSlice({
         resetSelectedCategoryId: (state) => {
             state.selectedCategoryId = null
         },
+        setActiveTodoPage: (state, action: PayloadAction<number>) => {
+            state.activeTodoPage = action.payload
+        },
+        setTodosCount: (state, action: PayloadAction<number>) => {
+            state.todosCount = action.payload
+        }
     }
 })
 
@@ -74,11 +84,14 @@ export const {
     setSelectedCategoryId,
     resetSelectedCategoryId, addTodos,
     updateTodo,
-    addFetchingTodosId, removeFetchingTodosId
+    addFetchingTodosId, removeFetchingTodosId,
+    setActiveTodoPage,
+    setTodosCount
 } = todoSlice.actions
 
-export const fetchTodosAsync = createAction("todo/fetchTodosAsync")
+export const fetchTodosAsync = createAction<FetchTodosInputType>("todo/fetchTodosAsync")
 export const deleteTodoAsync = createAction<number>("todo/deleteTodoAsync")
+export const getTodosCountAsync = createAction("todo/getTodosCountAsync")
 export const updateTodoAsync = createAction<TodoUpdateInputType>("todo/updateTodoAsync")
 export const createTodoAsync = createAction<TodosCreateInputType>("todo/createTodoAsync")
 export const toggleIsDoneAsync = createAction<number>("todo/toggleIsDoneAsync")

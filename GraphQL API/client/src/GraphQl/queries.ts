@@ -6,13 +6,22 @@ import {TODO_FRAGMENT} from "./fragments";
 export type FetchTodosType = {
     todos: TodoType[]
 }
+
+export type GetTodosVariablesType = {pageNumber: number, pageSizeNumber: number}
+export type FetchTodosInputType = {page: number, pageSize: number}
 export const GET_TODOS = gql`
       ${TODO_FRAGMENT}
-      query getTodos{
-        todos{
-           ...TodoFragment
+    query GetTodos($pageNumber: Int!, $pageSizeNumber: Int! ){
+        todos(page: $pageNumber, count: $pageSizeNumber){
+            ...TodoFragment
         }
     }
+`
+
+export const GET_TODOS_COUNT = gql`
+query GetTodosCount{
+  getCount
+}
 `
 
 // Categories queries

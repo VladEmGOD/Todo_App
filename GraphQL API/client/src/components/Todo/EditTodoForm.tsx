@@ -3,7 +3,7 @@ import {Button, Form} from "react-bootstrap";
 import {useFormik} from "formik";
 import {updateTodoAsync} from "../../redux/todoSlice";
 import {useDispatch} from "react-redux";
-import {useHistory} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {CategoryType, TodoType} from "../../redux/types/models";
 import {TodoUpdateInputType} from "../../GraphQl/mutations";
 
@@ -23,21 +23,22 @@ export const EditTodoForm: React.FC<PropsType> = ({todo, categories}) => {
         initialValues: {
             id: todo.id,
             title: todo.title,
-            deadline: todo.deadline,
+            deadline: todo.deadline?.slice(0, 10),
             categoryId: todo.categoryId,
         },
         onSubmit: (editedTodo: TodoUpdateInputType) => {
             if (formik.isValid) {
-                if (editedTodo.deadline !== "") {
+                if (editedTodo.deadline !== "" && editedTodo.deadline !== undefined) {
                     let date = new Date(editedTodo.deadline as string)
                     editedTodo.deadline = date.toISOString()
                 }
-                if (editedTodo.deadline === '') editedTodo.deadline = undefined
+                else editedTodo.deadline = undefined
                 dispatch(updateTodoAsync(editedTodo))
                 history.push('/')
             }
         },
         validate: values => {
+            console.log(values.deadline)
             let errors: ValidationType = {}
             if (!values.title) errors.title = "Todo title is required"
             return errors
@@ -67,7 +68,7 @@ export const EditTodoForm: React.FC<PropsType> = ({todo, categories}) => {
                               value={formik.values.title}/>
             </Form.Group>
             <Form.Group className={"form-group"}>
-                <Form.Label htmlFor={"Deadline"}>Deadline</Form.Label>
+                <Form.Label htmlFor={"deadline"}>Deadline</Form.Label>
                 <Form.Control type={"date"}
                               id={"deadline"}
                               onChange={formik.handleChange}

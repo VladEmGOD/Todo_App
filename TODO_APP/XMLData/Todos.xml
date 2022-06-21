@@ -4,7 +4,7 @@
     <Id>3</Id>
     <CategoryId>4</CategoryId>
     <Title>Test Todo 3</Title>
-    <Deadline>2022-05-12T00:00:00</Deadline>
+    <Deadline>2022-05-20T00:00:00Z</Deadline>
     <IsDone>true</IsDone>
   </TodoModel>
   <TodoModel>
@@ -12,27 +12,6 @@
     <CategoryId>5</CategoryId>
     <Title>Coock some cake</Title>
     <Deadline>2022-05-19T00:00:00</Deadline>
-    <IsDone>true</IsDone>
-  </TodoModel>
-  <TodoModel>
-    <Id>5</Id>
-    <CategoryId>4</CategoryId>
-    <Title>Test Todo 23</Title>
-    <Deadline xsi:nil="true" />
-    <IsDone>false</IsDone>
-  </TodoModel>
-  <TodoModel>
-    <Id>6</Id>
-    <CategoryId>4</CategoryId>
-    <Title>Test Todo 24</Title>
-    <Deadline xsi:nil="true" />
-    <IsDone>false</IsDone>
-  </TodoModel>
-  <TodoModel>
-    <Id>7</Id>
-    <CategoryId>0</CategoryId>
-    <Title>4545454</Title>
-    <Deadline xsi:nil="true" />
     <IsDone>false</IsDone>
   </TodoModel>
   <TodoModel>
@@ -41,5 +20,40 @@
     <Title>TestTodo12344</Title>
     <Deadline xsi:nil="true" />
     <IsDone>true</IsDone>
+  </TodoModel>
+  <TodoModel>
+    <Id>9</Id>
+    <CategoryId xsi:nil="true" />
+    <Title>NEW TODO!!!</Title>
+    <Deadline xsi:nil="true" />
+    <IsDone>false</IsDone>
+  </TodoModel>
+  <TodoModel>
+    <Id>10</Id>
+    <CategoryId>5</CategoryId>
+    <Title>ABOBASASD</Title>
+    <Deadline xsi:nil="true" />
+    <IsDone>false</IsDone>
+  </TodoModel>
+  <TodoModel>
+    <Id>11</Id>
+    <CategoryId>6</CategoryId>
+    <Title>ASASASDSDS</Title>
+    <Deadline>2022-06-18T00:00:00Z</Deadline>
+    <IsDone>false</IsDone>
+  </TodoModel>
+  <TodoModel>
+    <Id>12</Id>
+    <CategoryId>0</CategoryId>
+    <Title>tetr rheh h er hreth</Title>
+    <Deadline xsi:nil="true" />
+    <IsDone>false</IsDone>
+  </TodoModel>
+  <TodoModel>
+    <Id>13</Id>
+    <CategoryId>0</CategoryId>
+    <Title>WEREWREWFEC FE EF WV</Title>
+    <Deadline xsi:nil="true" />
+    <IsDone>false</IsDone>
   </TodoModel>
 </ArrayOfTodoModel>

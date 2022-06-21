@@ -16,13 +16,13 @@ export const Todo: React.FC<PropsType> = React.memo(({todo, category}) => {
     const isDisabled = fetchingId.length !== 0
     const dispatch = useAppDispatch()
 
-    let deadlineDate = new Date(todo.deadline as string)
+    //let deadlineDate = new Date(todo.deadline as string)
 
     return (
         <tr>
             <td>{category ? category.name : "No category"}</td>
             <td>{todo.title}</td>
-            <td>{todo.deadline ? deadlineDate.toISOString().slice(0, 10) : "no deadline"}</td>
+            <td>{todo.deadline ? todo.deadline.slice(0, 10) : "no deadline"}</td>
             <td>
                 <Button variant={todo.isDone ? "success" : "danger"}
                         disabled={isDisabled}
