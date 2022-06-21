@@ -35,9 +35,13 @@ namespace GraphQL_API
               .ResolveAsync(async context =>
               {
                   var inputTodo = context.GetArgument<TodoCreateInput>("TodoCreateInput");
-                  var todo = new TodoModel() { Title = inputTodo.Title, CategoryId = inputTodo.CategoryId, Deadline = inputTodo.Deadline };
-                  await todoRepository.CreateAsync(todo);
-                  return todo;
+                  var createdTodo = await todoRepository.CreateAsync(new TodoModel()
+                  {
+                      Title = inputTodo.Title,
+                      CategoryId = inputTodo.CategoryId,
+                      Deadline = inputTodo.Deadline
+                  });
+                  return createdTodo;
               });
 
             Field<TodoType, TodoModel>()
@@ -93,9 +97,8 @@ namespace GraphQL_API
               .ResolveAsync(async context =>
               {
                   var inputCategory = context.GetArgument<CategoryCreateInput>("CategoryCreateInput");
-                  var category = new CategoryModel() { Name = inputCategory.Name };
-                  await categoriesRerository.CreateAsync(category);
-                  return category;
+                  var createdCategoryawait = await categoriesRerository.CreateAsync(new CategoryModel() { Name = inputCategory.Name });
+                  return createdCategoryawait;
               });
 
             Field<CategoryType, CategoryModel>()

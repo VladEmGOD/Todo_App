@@ -21,7 +21,7 @@ namespace TODO_APP.Repositories.XML
             xmlSerializer = new XmlSerializer(typeof(List<CategoryModel>));
         }
 
-        public Task CreateAsync(CategoryModel categoryModel)
+        public Task<CategoryModel> CreateAsync(CategoryModel categoryModel)
         {
             List<CategoryModel> categories;
 
@@ -39,7 +39,7 @@ namespace TODO_APP.Repositories.XML
             using (FileStream fs = new FileStream(filePash, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write, 4096, true))
             {
                 xmlSerializer.Serialize(fs, categories);
-                return Task.FromResult(categories);
+                return Task.FromResult(categoryModel);
             }
         }
 

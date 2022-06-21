@@ -8,7 +8,7 @@ namespace Buisness.Repositories.Interfaces
 {
     public interface ITodoRepository
     {
-        Task CreateAsync(TodoModel todo);
+        Task<TodoModel> CreateAsync(TodoModel todo);
         Task DeleteAsync(int id);
         Task<TodoModel> GetTodoByIdAsync(int id);
         Task<IEnumerable<TodoModel>> GetTodosAsync();

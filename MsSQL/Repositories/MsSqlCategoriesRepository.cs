@@ -24,10 +24,12 @@ namespace MsSQL.Repositories
             return DbConnection.QueryAsync<CategoryModel>(query);
         }
 
-        public Task CreateAsync(CategoryModel category)
+        public Task<CategoryModel> CreateAsync(CategoryModel category)
         {
-            string query = @"insert into Categories(name) values (@Name)";
-            return DbConnection.QueryAsync(query, category);
+            string query = @"insert into Categories(name)
+                             output inserted.Id, inserted.Name
+                             values (@Name)";
+            return DbConnection.QuerySingleAsync<CategoryModel>(query, category);
         }
 
         public Task EditAsync(CategoryModel category)

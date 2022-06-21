@@ -18,12 +18,13 @@ namespace MsSQL.Repositories
             DbConection = conection;
         }
 
-        public Task CreateAsync(TodoModel todo)
+        public Task<TodoModel> CreateAsync(TodoModel todo)
         {
             if (todo.CategoryId == 0) todo.CategoryId = null;
             string sqlquery = @"insert into todos(CategoryId, Title, isDone, Deadline)
+                                output inserted.Id, inserted.CategoryId, inserted.Title, inserted.isDone, inserted.Deadline
                                 values (@CategoryId, @Title, @isDone, @Deadline)";
-            return DbConection.ExecuteAsync(sqlquery, todo);
+            return DbConection.QuerySingleAsync<TodoModel>(sqlquery, todo);
         }
 
         public Task DeleteAsync(int id)

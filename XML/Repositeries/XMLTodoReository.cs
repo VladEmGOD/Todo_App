@@ -21,7 +21,7 @@ namespace TODO_APP.Repositories.XML
             xmlSerializer = new XmlSerializer(typeof(List<TodoModel>));
         }
 
-        public Task CreateAsync(TodoModel todoModel)
+        public Task<TodoModel> CreateAsync(TodoModel todoModel)
         {
             List<TodoModel> todos;
 
@@ -39,7 +39,7 @@ namespace TODO_APP.Repositories.XML
             using (FileStream fs = new FileStream(filePash, FileMode.OpenOrCreate))
             {
                 xmlSerializer.Serialize(fs, todos);
-                return Task.FromResult(todos);
+                return Task.FromResult(todoModel);
             }
         }
 
@@ -98,7 +98,7 @@ namespace TODO_APP.Repositories.XML
 
         public Task<IEnumerable<TodoModel>> GetTodosAsync()
         {
-            using (FileStream fs = new FileStream(filePash, FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read, 4096, useAsync:true))
+            using (FileStream fs = new FileStream(filePash, FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read, 4096, useAsync: true))
             {
                 IEnumerable<TodoModel> todos = (List<TodoModel>?)xmlSerializer.Deserialize(fs);
                 if (todos == null)
@@ -109,7 +109,14 @@ namespace TODO_APP.Repositories.XML
 
         public Task<IEnumerable<TodoModel>> GetTodosByPaginationAsync(int page, int pageSize)
         {
-            throw new NotImplementedException();
+            using (FileStream fs = new FileStream(filePash, FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read, 4096, useAsync: true))
+            {
+                IEnumerable<TodoModel> todos = (List<TodoModel>?)xmlSerializer.Deserialize(fs);
+                if (todos == null)
+                    todos = new List<TodoModel>();
+
+                return Task.FromResult(todos.Skip(pageSize * page).Take(pageSize));
+            }
         }
 
         public Task UpdateAsync(TodoModel todo)

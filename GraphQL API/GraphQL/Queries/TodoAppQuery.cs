@@ -17,7 +17,7 @@ namespace GraphQL_API
         ICategoriesRerository categoriesRerository;
         public TodoAppQuery(RepositoryResolver repositoryReslover, IHttpContextAccessor httpContextAccesor)
         {
-            string dataSourceStr = httpContextAccesor.HttpContext.Request.Headers["dataSource"];            
+            string dataSourceStr = httpContextAccesor.HttpContext.Request.Headers["dataSource"];
             if (Enum.TryParse(dataSourceStr, out dataSource))
             {
                 todoRepository = repositoryReslover.ResolveTodoRepository(dataSource);
@@ -32,7 +32,22 @@ namespace GraphQL_API
             //Todo queries
             Field<ListGraphType<TodoType>>()
                 .Name("Todos")
-                .ResolveAsync(async context => await todoRepository.GetTodosAsync());
+                .Argument<NonNullGraphType<IntGraphType>, int>("Page", "Numper of page")
+                .Argument<NonNullGraphType<IntGraphType>, int>("Count", "count of items")
+                .ResolveAsync(async context =>
+                {
+                    int page = context.GetArgument<int>("Page");
+                    int count = context.GetArgument<int>("Count");
+                    return await todoRepository.GetTodosByPaginationAsync(page, count);
+                });
+
+            Field<IntGraphType>()
+                .Name("getCount")
+                .ResolveAsync(async context =>
+                {
+                    var todos = await todoRepository.GetTodosAsync();
+                    return (todos as List<TodoModel>).Count;
+                });
 
             Field<TodoType, TodoModel>()
                .Name("Todo")
